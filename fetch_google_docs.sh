@@ -6,7 +6,7 @@ gdrive_export() {
   mime=$3
   token=$4
   file=$5
-  file_id=$(cat "${file}" | grep "doc_id" | awk -F'"' '{print $4}')
+  file_id=$(cat "${file}" | grep "doc_id" | awk -F '[:,]' '{print $4}' | sed -e s/\"//g)
   echo "Downloading TYPE:${type} FILE:'$file' ID:$file_id"
   url="https://www.googleapis.com/drive/v3/files/${file_id}/export?mimeType=application/${mime}"
   curl $url -s --create-dirs --header "Authorization: Bearer ${token}" --header 'Accept: application/json' --compressed -o "${destination}/${file}.${type}"
